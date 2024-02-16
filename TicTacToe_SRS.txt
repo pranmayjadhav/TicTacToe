@@ -41,16 +41,70 @@ Can you quickly differentiate between class diagram and schema design, beacause 
 
 2) *Enitity Classes - atrributes
 
-*ParkingLot - Address, EntryGate, ExitGate, Status, AllowedVehicleTypes, FeeCalculatorStrategy, SlotAllocationStrategy, List<Users>
-*ParkingFloor - ParkingSlots, FloorNumber, Status 
-*Gate - Id, Type, GateNUmber, Status, Operator
-*ParkingSlot - VehicleType, Status, SlotNumber, Floor
-*Vehicle - VehicleNumber, VehicleType, VehicleOwner
-*Operator - Id, EmpId, Name
-*Token - TokenNumber, EntryTime, Vehicle, ParkingSlot, Gate, Operator
-*Bill - Id, ExitTime, Token, Gate, Operator, Amount, Status, FeeCalculatorStrategy, List<Payment>
-*Payment - PaymentMode, Amount, Time, Status, ReferenceNumber
- 
+*Game - Board, List<Player>, List<Move>, GameState, Player winner, int nextPlayerMoveIndex, List<WinningStrategy>
+*Board - Size, List<List<Cell>>
+*Cell - Row, Column. CellState, Player
+*Player - Id, Name, Symbol, PlayerType
+*Bot - BotDifficultyLevel
+*Symbol - char, color, img
+*Move - Cell
+ENUM
+**GameState - IN_PROGRESS, SUCCESS, DRAW, PAUSE
+**CellState - FILLED, EMPTY
+**PlayerType - HUMAN, BOT
+**BotDifficultyLevel - EASY, MEDIUM, HARD
+
+Design Patterns
+@GameBuilder 	- to validate all player in game have diff symbol
+		- to have only bot in the game
+@<<BotPlayingStrategy>> - makeMOve()
+			- Easy Play strategy
+			- Medium
+			- Hard
+@BotPlayingStrategyFactory - to make above work we need factory
+		- getBotPlayingStrategyByDifficultyLevel()
+@<<WinningStrategy>>- checkWinner() 
+			- Row Winning strategy
+			- Column
+			- Diagonal
+			- Corner
+			
+
+Check winner function
+
+1) checkWinner(board) {
+	for all players x:
+		for every row r:
+			is_true = true;
+			for every column c:
+				if(board[r][c] != 'X')
+					is_true = false;
+					break;
+			if(is_true == true) 
+				return true
+			
+   } TC: O(n^3)
+	- Mohit made Move, Rama can't win
+		--No need to check for every single player after every move
+
+2) checkWinner(board, lastMovePlayer) {
+	
+   } TC: O(n^2)
+
+3) After a move, victory can also happen because of the row of the cell, column of the cell, 
+	any diagonal of board/cell.
+   checkWinner(board, cell) {
+	check ith row
+	check jth column
+	check both diagonal
+   } TC: O(n)
+
+4) Need to maintain frequency of symbols
+   checkWinner() {
+	Hash map for store freq
+		if freq == 3 
+			return winner
+   }
 
 
 3) Schema design //remaining
