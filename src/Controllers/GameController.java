@@ -6,9 +6,8 @@ import Exceptions.SymbolCountException;
 import Models.Game;
 import Models.GameState;
 import Models.Player;
-import Strategies.WinningStrategy;
+import Strategies.winningStrategies.WinningStrategy;
 
-import java.util.Collections;
 import java.util.List;
 
 public class GameController {
@@ -22,16 +21,16 @@ public class GameController {
         return Game.getBuilder()
                 .setDimension(dimension)
                 .setPlayers(players)
-                .setWinningStrategies(winningStrategies)
+                .setWinningStrategy(winningStrategy)
                 .build();
     }
 
     public void makeMove(Game game){
-
+        game.makeMove();
     }
 
     public void displayBoard(Game game){
-
+        game.displayBoard();
     }
 
     public void getWinner(Game game){

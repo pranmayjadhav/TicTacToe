@@ -3,8 +3,7 @@ package Models;
 import Exceptions.BotCountException;
 import Exceptions.PlayerCountDimensionMismatchException;
 import Exceptions.SymbolCountException;
-import Strategies.WinningStrategy;
-import javafx.util.Builder;
+import Strategies.winningStrategies.WinningStrategy;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,23 +16,49 @@ public class Game {
     private List<Move> moves;
 
     private GameState gameState;
-    private int nextMovePlayerIndex;
+    private int currentPlayerIndex;
     private Player winner;
-    private List<WinningStrategy> winningStrategies;
+    private WinningStrategy winningStrategy;
+
     public Board getBoard(){
         return board;
     }
 
-    public Game(int dimensions, List<Player> players, List<WinningStrategy> winningStrategies) {
+    public Game(int dimensions, List<Player> players, WinningStrategy winningStrategy) {
         this.players = players;
         this.moves = new ArrayList<>();
         this.gameState = GameState.IN_PROGRESS;
-        this.nextMovePlayerIndex = 0;
+        this.currentPlayerIndex = 0;
         this.winner = winner;
-        this.winningStrategies = winningStrategies;
+        this.winningStrategy = winningStrategy;
         this.board = new Board(dimensions);
     }
 
+    public void displayBoard() {
+        this.board.displayBoard();
+    }
+
+    public void makeMove() {
+        // Figure out who's turn is it
+        Player currentPlayer = players.get(currentPlayerIndex);
+
+        // Ask that player to tell which cell to move on
+        Move move = currentPlayer.makeMove(board);
+        moves.add(move);
+
+        if(winningStrategy.checkWinner(move, board)){
+            setGameState(GameState.ENDED);
+            setWinner(currentPlayer);
+            return;
+        }
+        if(moves.size() == board.getSize() * board.getSize()){
+            // Game has drawn
+            setGameState(GameState.DRAW);
+            return;
+        }
+
+        currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
+    }
     public static Builder getBuilder() {
 
         Builder builder = new Builder();
@@ -43,7 +68,7 @@ public class Game {
     public static class Builder {
         private int dimension ;
         private List<Player> players;
-        private List<WinningStrategy> winningStrategies;
+        private WinningStrategy winningStrategy;
 
         public Builder setDimension(int dimension) {
             this.dimension = dimension;
@@ -55,8 +80,8 @@ public class Game {
             return this;
         }
 
-        public Builder setWinningStrategies(List<WinningStrategy> winningStrategies) {
-            this.winningStrategies = winningStrategies;
+        public Builder setWinningStrategy(WinningStrategy winningStrategy) {
+            this.winningStrategy = winningStrategy;
             return this;
 
         }
@@ -66,11 +91,13 @@ public class Game {
             return this;
         }
 
-        public Builder addWinningStrategy(WinningStrategy winningStrategy){
-            this.winningStrategies.add(winningStrategy);
-            return this;
+//        public Builder addWinningStrategy(WinningStrategy winningStrategy){
+//            this.winningStrategy.add(winningStrategy);
+//            return this;
+//
+//        }
 
-        }
+        //Validate Bot single bot player
         private void validateBotCount() throws BotCountException {
             int botCount = 0;
             for(Player p : players){
@@ -83,6 +110,7 @@ public class Game {
             }
         }
 
+        //Validate number of players == dimension -1
         private void validatePlayersCount() throws PlayerCountDimensionMismatchException {
 
 
@@ -120,7 +148,7 @@ public class Game {
             return new Game(
                     this.dimension,
                     this.players,
-                    this.winningStrategies
+                    this.winningStrategy
             );
         }
     }
@@ -152,12 +180,12 @@ public class Game {
         this.gameState = gameState;
     }
 
-    public int getNextMovePlayerIndex() {
-        return nextMovePlayerIndex;
+    public int getCurrentPlayerIndex() {
+        return currentPlayerIndex;
     }
 
-    public void setNextMovePlayerIndex(int nextMovePlayerIndex) {
-        this.nextMovePlayerIndex = nextMovePlayerIndex;
+    public void setCurrentPlayerIndex(int currentPlayerIndex) {
+        this.currentPlayerIndex = currentPlayerIndex;
     }
 
     public Player getWinner() {
@@ -168,11 +196,11 @@ public class Game {
         this.winner = winner;
     }
 
-    public List<WinningStrategy> getWinningStrategies() {
-        return winningStrategies;
+    public WinningStrategy getWinningStrategies() {
+        return winningStrategy;
     }
 
-    public void setWinningStrategies(List<WinningStrategy> winningStrategies) {
-        this.winningStrategies = winningStrategies;
+    public void setWinningStrategies(WinningStrategy winningStrategy) {
+        this.winningStrategy = winningStrategy;
     }
 }

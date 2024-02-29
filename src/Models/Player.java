@@ -1,5 +1,7 @@
 package Models;
 
+import java.util.Scanner;
+
 public class Player {
     private String name;
     private int id;
@@ -36,5 +38,26 @@ public class Player {
 
     public void setPlayerType(PlayerType playerType) {
         this.playerType = playerType;
+    }
+
+    public Move makeMove(Board board){
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("It's " + name + "'s turn");
+        System.out.println("Please enter row");
+        int row = scanner.nextInt();
+
+        System.out.println("Please enter column");
+        int col = scanner.nextInt();
+
+        //TODO validate
+        Cell cell = board.getBoard().get(row).get(col);
+        cell.setCellState(CellState.FILLED);
+        cell.setPlayer(this);
+
+        Move move = new Move();
+        move.setCell(cell);
+        move.setPlayer(this);
+        return move;
+
     }
 }

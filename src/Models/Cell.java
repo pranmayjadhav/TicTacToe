@@ -13,6 +13,10 @@ public class Cell {
         this.cellState = cellState;
     }
 
+    public Cell() {
+
+    }
+
     public int getRow() {
         return row;
     }
