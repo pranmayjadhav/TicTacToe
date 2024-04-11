@@ -4,5 +4,6 @@ public enum GameState {
     IN_PROGRESS,
     DRAW,
     SUCCESS,
-    ENDED, PAUSE
+    ENDED,
+    PAUSE
 }

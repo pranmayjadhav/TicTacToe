@@ -8,6 +8,13 @@ public class Player {
     private Symbol symbol;
     private PlayerType playerType;
 
+    public Player(String name, int id, Symbol symbol, PlayerType playerType) {
+        this.name = name;
+        this.id = id;
+        this.symbol = symbol;
+        this.playerType = playerType;
+    }
+
     public String getName() {
         return name;
     }
@@ -43,21 +50,32 @@ public class Player {
     public Move makeMove(Board board){
         Scanner scanner = new Scanner(System.in);
         System.out.println("It's " + name + "'s turn");
-        System.out.println("Please enter row");
-        int row = scanner.nextInt();
+        int row, col;
+        boolean isValidInput = false;
 
-        System.out.println("Please enter column");
-        int col = scanner.nextInt();
+        while(!isValidInput) {
+            System.out.println("Please enter row (0-" + (board.getSize() - 1) + "):");
+            row = scanner.nextInt();
 
-        //TODO validate
-        Cell cell = board.getBoard().get(row).get(col);
-        cell.setCellState(CellState.FILLED);
-        cell.setPlayer(this);
+            System.out.println("Please enter column (0-" + (board.getSize() - 1) + "):");
+            col = scanner.nextInt();
 
-        Move move = new Move();
-        move.setCell(cell);
-        move.setPlayer(this);
-        return move;
+            if(row >= 0 && row < board.getSize() && col >= 0 && col < board.getSize()) {
+                // Valid input
+                Cell cell = board.getBoard().get(row).get(col);
+                cell.setCellState(CellState.FILLED);
+                cell.setPlayer(this);
+
+                Move move = new Move();
+                move.setCell(cell);
+                move.setPlayer(this);
+                return move;
+            } else {
+                // Invalid input
+                System.out.println("Invalid input. Please enter again.");
+            }
+        }
+        return null; // This should never happen
 
     }
 }

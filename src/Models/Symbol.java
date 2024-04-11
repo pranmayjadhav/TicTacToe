@@ -10,4 +10,7 @@ public class Symbol {
     public void setaChar(char aChar) {
         this.aChar = aChar;
     }
+    public Symbol(char aChar) {
+        this.aChar = aChar;
+    }
 }

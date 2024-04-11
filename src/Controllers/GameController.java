@@ -13,7 +13,7 @@ import java.util.List;
 public class GameController {
     public Game startGame(int dimension,
                           List<Player> players,
-                          List<WinningStrategy> winningStrategies) throws BotCountException, SymbolCountException, PlayerCountDimensionMismatchException {
+                          WinningStrategy winningStrategies) throws BotCountException, SymbolCountException, PlayerCountDimensionMismatchException {
         // we will create the game
         // we need to validate
 //        game.getbuilder().setplayers(...).setWinning(...);
@@ -21,7 +21,7 @@ public class GameController {
         return Game.getBuilder()
                 .setDimension(dimension)
                 .setPlayers(players)
-                .setWinningStrategy(winningStrategy)
+                .setWinningStrategy(winningStrategies)
                 .build();
     }
 
@@ -33,8 +33,9 @@ public class GameController {
         game.displayBoard();
     }
 
-    public void getWinner(Game game){
+    public Player getWinner(Game game){
 
+        return game.getWinner();
     }
 
     public GameState checkState(Game game){
@@ -42,7 +43,7 @@ public class GameController {
     }
 
     public void undo(Game game){
-
+        game.undo();
     }
 
 }

@@ -112,8 +112,6 @@ public class Game {
 
         //Validate number of players == dimension -1
         private void validatePlayersCount() throws PlayerCountDimensionMismatchException {
-
-
             if(players.size() != dimension - 1){
                 throw new PlayerCountDimensionMismatchException();
             }
@@ -202,5 +200,23 @@ public class Game {
 
     public void setWinningStrategies(WinningStrategy winningStrategy) {
         this.winningStrategy = winningStrategy;
+    }
+
+    //Remaining
+    public void undo(){
+        // Get the previous player
+        // Make sure only human players can do a undo
+        // For bot, just return
+        // sout do you want to undo
+        // yes or no
+        // if the player says, return
+        // Now actual undo logic begins
+        /*
+        1. Remove last entry from moves
+        2. update the board, update cell state and player
+        3. update the orderone winningstrategy maps (winningStrategy.handleUndo())
+
+         */
+
     }
 }
